@@ -1,15 +1,15 @@
 !BOP
 !
-! !ROUTINE: tetcw_1k 
+! !ROUTINE: tetcw_1kbc
 !
 ! !INTERFACE:
-subroutine tetcw_1k(iklib,nik,nt,nb,wt,ebd,tetc,linkt,v,efer,omeg, &
-     sigfreq,cw)
+subroutine tetcw_1kbc(iklib,iband,jband,nik,nt,nb,wt,ebd,tetc,linkt,v,efer, &
+     omeg,sigfreq,cw)
 !
 ! !DESCRIPTION: 
 ! 
 ! This subroutine caluclates the value of the weights for convolution
-! using the improved tetrahedron method. cw(ib,jb) contains the weight 
+! using the improved tetrahedron method. cw contains the weight 
 ! on ik point for the bands ib and the band jb at ik+q. 
 !  
 ! !USES:
@@ -20,6 +20,8 @@ subroutine tetcw_1k(iklib,nik,nt,nb,wt,ebd,tetc,linkt,v,efer,omeg, &
        implicit none      
 ! !INPUT PARAMETERS:
        integer, intent(in) :: iklib ! library k-point number
+       integer, intent(in) :: iband ! first band index
+       integer, intent(in) :: jband ! second band index
        integer(4), intent(in) :: nik        ! Number of k-points
        integer(4), intent(in) :: nt         ! Number of tetrahedra
        integer(4), intent(in) :: nb         ! Number of bands
@@ -43,7 +45,7 @@ subroutine tetcw_1k(iklib,nik,nt,nb,wt,ebd,tetc,linkt,v,efer,omeg, &
 !                                           weights when it equals 1,2,3. And
 !                                           surface integration for 4.
 ! !OUTPUT PARAMETERS:
-       real(8), intent(out)    :: cw(nb,nb) ! the values of
+       real(8), intent(out)    :: cw ! the values of
   !<sag>
   ! local variables
   real(8), target, allocatable :: target_ebd(:,:)
@@ -98,11 +100,11 @@ subroutine tetcw_1k(iklib,nik,nt,nb,wt,ebd,tetc,linkt,v,efer,omeg, &
   !
   !     Calculate the weights.
   !
-  call convw_1k(iklib,efer,omeg,sigfreq,cw)
+  call convw_1kbc(iklib,iband,jband,efer,omeg,sigfreq,cw)
   !<sag>
   if (pointerhandling.eq.1) then
      deallocate(target_tetc,target_linkt,target_ebd,target_wt)
   end if
   !</sag>  
-end subroutine tetcw_1k
+end subroutine tetcw_1kbc
 !EOC

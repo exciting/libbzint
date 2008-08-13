@@ -1,5 +1,4 @@
 
-
 !BOP
 !
 ! !ROUTINE: convw_1k
@@ -16,6 +15,8 @@ subroutine convw_1k(iklib,efer,omeg,sigfreq,cweight)
 !   sigfreq=3, weights for the Polarization with imaginary frequencies.
 !   sigfreq=4, it is for the q-dependent surface integration (the surface is
 !   defined by e_jb-e_ib=omeg.
+!   The convolution weight is calculated for all band combinations and one
+!   {\bf k}-point.
 !       
 ! !USES:
   use order
@@ -81,7 +82,6 @@ subroutine convw_1k(iklib,efer,omeg,sigfreq,cweight)
                        ! if specified k-point matches
                        if (kin.eq.iklib) &
                             cweight(ib,jb)=cweight(ib,jb)+vt*tw/4.0d0
-!!!                       cweight(ib,jb,kin)=cweight(ib,jb,kin)+vt*tw/4.0d0
                     end do
                  else if (maxval(ee2,dim=1).gt.efer) then
                     do i=1,4
@@ -98,7 +98,6 @@ subroutine convw_1k(iklib,efer,omeg,sigfreq,cweight)
                        kjn=tetcorn(ik2(i),tetln(itet))
                        if (kin.eq.iklib) &
                             cweight(ib,jb)=cweight(ib,jb)+term*tw
-!!!                       cweight(ib,jb,kin)=cweight(ib,jb,kin)+term*tw
                     end do
                  end if
               end do
@@ -119,7 +118,6 @@ subroutine convw_1k(iklib,efer,omeg,sigfreq,cweight)
                        kjn=tetcorn(i,tetln(itet))
                        if (kin.eq.iklib) &
                        cweight(ib,jb)=cweight(ib,jb)+term*tw
-!!!                       cweight(ib,jb,kin)=cweight(ib,jb,kin)+term*tw
                     end do
                  else 
                     w1t(1:4)=0.0d0
@@ -129,7 +127,6 @@ subroutine convw_1k(iklib,efer,omeg,sigfreq,cweight)
                        kjn=tetcorn(i,tetln(itet))
                        if (kin.eq.iklib) &
                             cweight(ib,jb)=cweight(ib,jb)+w1t(i)*vt*6*tw
-!!!                       cweight(ib,jb,kin)=cweight(ib,jb,kin)+w1t(i)*vt*6*tw
                     end do
                  end if
               end do
@@ -139,6 +136,10 @@ subroutine convw_1k(iklib,efer,omeg,sigfreq,cweight)
   case(2:4)
      ! for the q-dependent bulk integration for Polarization
      do itet=1,ntet
+
+        ! only specified k-point is considered
+        if (all(tetcorn(:,itet).ne.iklib)) cycle
+
         tw=dble(tetweig(itet))
         do ib=1,nband
            do i=1,4
@@ -157,7 +158,6 @@ subroutine convw_1k(iklib,efer,omeg,sigfreq,cweight)
                        kjn=tetcorn(i,tetln(itet))
                        if (kin.eq.iklib) &
                             cweight(ib,jb)=cweight(ib,jb)+w1t(i)*vt*6.0d0*tw
-!!!                       cweight(ib,jb,kin)=cweight(ib,jb,kin)+w1t(i)*vt*6.0d0*tw
                     end do
                  end if
               end do
