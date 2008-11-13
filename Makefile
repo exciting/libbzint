@@ -1,5 +1,6 @@
 include ../../make.inc
 
+
 DESTDIR  = ./
 LIBNAME = libbzint.a
 ARCH     = ar
@@ -127,6 +128,9 @@ doc:
 #
 dist:   
 	tar -cPzvf $(DIST_FILE) Makefile $(FILES) tetra.tex tests.tex 
+ifeq ($(BUILDSMBUILDSMPP),true)
+F90=$(F90MT)
+endif
 
 .f90.o: Makefile
 	$(F90) $(F90_OPTS) -c $<
