@@ -5,30 +5,30 @@
 !
 ! !INTERFACE:
 subroutine convw_1k(iklib,efer,omeg,sigfreq,cweight)
-! 
+!
 ! !DESCRIPTION:
-!  
+!
 !   This subroutine calculates the integration weight of each k-point for
 !   all band pairs. Sigfreq distinguishes among the different kinds of weights.
-!   sigfreq=1, normal q-dependent bulk integration. 
+!   sigfreq=1, normal q-dependent bulk integration.
 !   sigfreq=2, weights for the Polarization with real frequencies
 !   sigfreq=3, weights for the Polarization with imaginary frequencies.
 !   sigfreq=4, it is for the q-dependent surface integration (the surface is
 !   defined by e_jb-e_ib=omeg.
 !   The convolution weight is calculated for all band combinations and one
 !   {\bf k}-point.
-!       
+!
 ! !USES:
   use order
   use tetra_internal
-  implicit none     
+  implicit none
 ! !INPUT PARAMETERS:
   integer, intent(in) :: iklib
   real(8), intent(in)  :: efer
   real(8), intent(in)  :: omeg
   integer(4), intent(in)  :: sigfreq
 ! !OUTPUT PARAMETERS:
-  real(8), intent(out) :: cweight(nband,nband) ! the weight 
+  real(8), intent(out) :: cweight(nband,nband) ! the weight
 ! !LOCAL VARIABLES:
   integer(4) :: itet,i,ib,jb,kin,kjn
   integer(4), dimension(4) :: ik1
@@ -41,11 +41,11 @@ subroutine convw_1k(iklib,efer,omeg,sigfreq,cweight)
 ! !EXTERNAL ROUTINES:
   external intweight1t
   external convw1t
-  external convw1tsurf
+
   external bloechlcor
 ! !SYSTEM ROUTINES:
   intrinsic maxval
-  intrinsic minval       
+  intrinsic minval
 ! !REVISION HISTORY:
 !
 !   Created: August 2008 by S. Sagmeister
@@ -71,7 +71,7 @@ subroutine convw_1k(iklib,efer,omeg,sigfreq,cweight)
               ee1(i)=eband(ib,tetcorn(i,itet))
            end do
            if (maxval(ee1,dim=1).le.efer) then
-              do jb=1,nband          
+              do jb=1,nband
                  do i=1,4
                     ee2(i)=eband(jb,tetcorn(i,tetln(itet)))
                  end do
@@ -119,7 +119,7 @@ subroutine convw_1k(iklib,efer,omeg,sigfreq,cweight)
                        if (kin.eq.iklib) &
                        cweight(ib,jb)=cweight(ib,jb)+term*tw
                     end do
-                 else 
+                 else
                     w1t(1:4)=0.0d0
                     call convw1t(ee1,ee2,efer,w1t)
                     do i=1,4

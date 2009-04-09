@@ -4,44 +4,44 @@
 !
 ! !INTERFACE:
       subroutine convw(efer,omeg,sigfreq,cweight)
-! 
+!
 ! !DESCRIPTION:
-!  
+!
 !   This subroutine calculates the integration weight of each k-point for
 !   all band pairs. Sigfreq distinguishes among the different kinds of weights.
-!   sigfreq=1, normal q-dependent bulk integration. 
+!   sigfreq=1, normal q-dependent bulk integration.
 !   sigfreq=2, weights for the Polarization with real frequencies
 !   sigfreq=3, weights for the Polarization with imaginary frequencies.
 !   sigfreq=4, it is for the q-dependent surface integratio (the surface is defined by
 !   e_jb-e_ib=omeg.
 
-!       
+!
 ! !USES:
-       
+
        use order
-       
+
        use tetra_internal
-       
-       implicit none     
-       
+
+       implicit none
+
 ! !INPUT PARAMETERS:
- 
+
        real(8), intent(in)  :: efer                       ! fermi energy
-     
+
        real(8), intent(in)  :: omeg
 
-       integer(4), intent(in)  :: sigfreq       
+       integer(4), intent(in)  :: sigfreq
 
 ! !OUTPUT PARAMETERS:
-       
-       real(8), intent(out) :: cweight(nband,nband,nirkp) ! the weight 
-!                                                           of each 
+
+       real(8), intent(out) :: cweight(nband,nband,nirkp) ! the weight
+!                                                           of each
 !                                                           k-point for
 !                                                           each band
- 
-!  
+
+!
 ! !LOCAL VARIABLES:
- 
+
       integer(4) :: itet,i,ib,jb,kin,kjn
       integer(4), dimension(4) :: ik1
       integer(4), dimension(4) :: ik2
@@ -55,28 +55,28 @@
 
       external intweight1t
       external convw1t
-      external convw1tsurf
+
 !      external sort
       external bloechlcor
 
 ! !SYSTEM ROUTINES:
 
       intrinsic maxval
-      intrinsic minval       
-       
+      intrinsic minval
+
 ! !REVISION HISTORY:
 !
-!   Created:  3th. March 2004. by RGA 
+!   Created:  3th. March 2004. by RGA
 !
 !EOP
 !BOC
- 
+
       cweight=0.0d0
       omgga=omeg
       sgnfrq=sigfreq
       wwwt=0.0d0
       select case (sigfreq)
-      
+
       case(1)      ! normal q-dependent bulk integration
       do itet=1,ntet
         tw=dble(tetweig(itet))
@@ -85,7 +85,7 @@
             ee1(i)=eband(ib,tetcorn(i,itet))
           enddo
           if(maxval(ee1,dim=1).le.efer)then
-            do jb=1,nband          
+            do jb=1,nband
               do i=1,4
                 ee2(i)=eband(jb,tetcorn(i,tetln(itet)))
               enddo
@@ -99,7 +99,7 @@
               else if(maxval(ee2,dim=1).gt.efer)then
                 do i=1,4
                   ee2(i)=efer-ee2(i)
-                enddo           
+                enddo
                 w1t(1:4)=0.0d0
                 wcor(1:4)=0.0d0
                 call sort(4,ee2,ik2)
@@ -113,7 +113,7 @@
                 enddo
               endif
             enddo
-          
+
           else if(minval(ee1,dim=1).le.efer)then
             do jb=1,nband
               do i=1,4
@@ -131,7 +131,7 @@
                   kjn=tetcorn(i,tetln(itet))
                   cweight(ib,jb,kin)=cweight(ib,jb,kin)+term*tw
                 enddo
-              else 
+              else
 !                  write(25,*)'rga: convw: calling bothpart1t with pars:'
 !                  write(25,*)'rga: convw: ee1 = ',ee1
 !                  write(25,*)'rga: convw: ee2 = ',ee2
@@ -145,15 +145,15 @@
                     kjn=tetcorn(i,tetln(itet))
                     cweight(ib,jb,kin)=cweight(ib,jb,kin)+w1t(i)*vt*6*tw
                   enddo
-              
+
               endif
             enddo
           endif
         enddo
       enddo  ! itet
 
-      
-      case(2:4)     ! for the q-dependent bulk integration for Polarization                      
+
+      case(2:4)     ! for the q-dependent bulk integration for Polarization
       do itet=1,ntet
         tw=dble(tetweig(itet))
         do ib=1,nband
@@ -178,13 +178,13 @@
           endif
         enddo
       enddo
-      
+
       case default
         continue
       end select
-      
+
       return
-      
+
       end subroutine convw
 
 !EOC
