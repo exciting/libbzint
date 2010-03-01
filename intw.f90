@@ -1,3 +1,9 @@
+
+! Copyright (C) Ricardo Gomez-Abal (RGA) and Xinzheng Li (XZL),
+! Fritz-Haber-Institut der Max-Planck-Geselschaft, Berlin, Germany.
+! This file is distributed under the terms of the GNU General Public License.
+! See the file COPYING for license details.
+
 !BOP
 !
 ! !ROUTINE: intw 
