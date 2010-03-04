@@ -1,8 +1,10 @@
 
-! Copyright (C) Ricardo Gomez-Abal (RGA) and Xinzheng Li (XZL),
-! Fritz-Haber-Institut der Max-Planck-Geselschaft, Berlin, Germany.
-! This file is distributed under the terms of the GNU General Public License.
-! See the file COPYING for license details.
+! The code was developed at the Fritz Haber Institute, and
+! the intellectual properties and copyright of this file
+! are with the Max Planck Society. When you use it, please
+! cite R. Gomez-Abal, X. Li, C. Ambrosch-Draxl, M. Scheffler,
+! Extended linear tetrahedron method for the calculation of q-dependent
+! dynamical response functions, to be published in Comp. Phys. Commun. (2010)
 
 !bop
 !
